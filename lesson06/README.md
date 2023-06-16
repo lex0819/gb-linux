@@ -26,7 +26,7 @@ sudo apt install prog-name
 netstat -r
 ```
 
-видим **172.16.8.0** **0.0.0.0**
+видим **172.16.8.0** и **0.0.0.0**
 
 Смотрим имя сетевого интерфейса и его адрес
 
@@ -40,7 +40,21 @@ ip a
 **/etc/netplan**
 **.yaml** файл конфигурации
 
+Сохраним файл **.yaml** и применим конфигурацию
+
+```
+sudo netplan apply
+```
+
+Проверим работоспособность сети
+
+```
+ping google.com
+```
+
 ### 2 Настроить правила iptables для доступности сервисов на TCP-портах 22, 80 и 443. Также сервер должен иметь возможность устанавливать подключения к серверу обновлений. Остальные подключения запретить.
+
+http://www.netfilter.org/
 
 Посмотреть что уже есть в iptables
 
@@ -48,16 +62,16 @@ ip a
 sudo iptables -L
 ```
 
-Запретить все подключения, которые не разрешены.
+Очистить все правила из iptables
 
 ```
-sudo iptables -P INPUT DROP
+sudo iptables -F
 ```
 
-Разрешить доступ на порт, например порт 80
+Разрешить доступ на порт по его номеру, например порт 80
 
 ```
-sudo iptables -A INPUT -p TCP --dport 80 -j ACCEPT
+sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT
 ```
 
 Разрешить все ранее имеющиеся подключения
@@ -66,8 +80,52 @@ sudo iptables -A INPUT -p TCP --dport 80 -j ACCEPT
 sudo iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 ```
 
+Запретить все подключения, которые не разрешены.
+
+```
+sudo iptables -P INPUT DROP
+sudo iptables -P FORWARD DROP
+```
+
+Разрешить исходящие подключения, например к обновлениям
+
+```
+sudo iptables -P OUTPUT ACCEPT
+```
+
+Сохраним правила iptables
+
+```
+sudo service iptables-persistent save
+```
+
+Рестартуем сервис и проверяем статус:
+
+```
+systemctl restart iptables
+systemctl status iptables
+```
+
 ### 3 Запретить любой входящий трафик с IP 3.4.5.6.
+
+```
+sudo iptables -A INPUT -s 3.4.5.6 -j DROP
+
+```
 
 ### 4 Запросы на порт 8090 перенаправлять на порт 80 (на этом же сервере).
 
+```
+sudo iptables -t nat -A PREROUTING -p tcp --dport 8090 -j REDIRECT --to-port 80
+```
+
 ### 5 Разрешить подключение по SSH только из сети 192.168.0.0/24.
+
+```
+sudo iptables -A INPUT -p tcp --dport 22 -s 192.168.0.0/24 -j ACCEPT
+
+```
+
+Дополнительные материалы
+https://www.opennet.ru/docs/RUS/iptables/
+https://www.alexgur.ru/articles/5043/
