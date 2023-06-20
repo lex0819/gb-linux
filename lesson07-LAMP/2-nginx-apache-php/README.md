@@ -20,6 +20,46 @@ Syntax OK
 sudo apt install libapache2-mod-php8.1
 ```
 
+в папке **/etc/apache2/mods-enabled/** видим два файла
+
+```bash
+php8.1.conf -> ../mods-available/php8.1.conf
+php8.1.load -> ../mods-available/php8.1.load
+```
+
+смотрим внутрь файла **php8.1.conf** - там деректива для апача какой интерпретатор использовать для php
+**SetHandler application/x-httpd-php**
+
+```bash
+lex@gblex:/etc/apache2/mods-enabled$ cat php8.1.conf
+<FilesMatch ".+\.ph(ar|p|tml)$">
+    SetHandler application/x-httpd-php
+</FilesMatch>
+<FilesMatch ".+\.phps$">
+    SetHandler application/x-httpd-php-source
+    # Deny access to raw php sources by default
+    # To re-enable it's recommended to enable access to the files
+    # only in specific virtual host or directory
+    Require all denied
+</FilesMatch>
+# Deny access to files without filename (e.g. '.php')
+<FilesMatch "^\.ph(ar|p|ps|tml)$">
+    Require all denied
+</FilesMatch>
+
+# Running PHP scripts in user directories is disabled by default
+#
+# To re-enable PHP in user directories comment the following lines
+# (from <IfModule ...> to </IfModule>.) Do NOT set it to On as it
+# prevents .htaccess files from disabling it.
+<IfModule mod_userdir.c>
+    <Directory /home/*/public_html>
+        php_admin_flag engine Off
+    </Directory>
+</IfModule>
+lex@gblex:/etc/apache2/mods-enabled$
+```
+
 апач установился, но по дефолту слушает 80 порт, а этот порт уже занят nginx, поэтому имеем конфликт
 
 переходим в папку апача
@@ -229,4 +269,5 @@ cat /var/www/html/index.html
 заходим на наши сервера снаружи, они разделены по портам
 
 на адресе **http://192.168.1.100:80/php-fpm.test/** ничего не открывается, потому что nginx теперь не крутит скрипты php.
+
 на адресе **http://192.168.1.100:8080/php-fpm.test/** открывается index.php и выводит phpinfo() потому, что там работает apache и крутит скрипты php.

@@ -313,6 +313,74 @@ Listen 8080
 lex@gblex:/etc/apache2$
 lex@gblex:/etc/apache2$
 lex@gblex:/etc/apache2$
+lex@gblex:/etc/apache2$ cd mods-enabled/
+lex@gblex:/etc/apache2/mods-enabled$
+lex@gblex:/etc/apache2/mods-enabled$
+lex@gblex:/etc/apache2/mods-enabled$ ls -l
+total 0
+lrwxrwxrwx 1 root root 36 Jun 20 05:38 access_compat.load -> ../mods-available/access_compat.load
+lrwxrwxrwx 1 root root 28 Jun 20 05:38 alias.conf -> ../mods-available/alias.conf
+lrwxrwxrwx 1 root root 28 Jun 20 05:38 alias.load -> ../mods-available/alias.load
+lrwxrwxrwx 1 root root 33 Jun 20 05:38 auth_basic.load -> ../mods-available/auth_basic.load
+lrwxrwxrwx 1 root root 33 Jun 20 05:38 authn_core.load -> ../mods-available/authn_core.load
+lrwxrwxrwx 1 root root 33 Jun 20 05:38 authn_file.load -> ../mods-available/authn_file.load
+lrwxrwxrwx 1 root root 33 Jun 20 05:38 authz_core.load -> ../mods-available/authz_core.load
+lrwxrwxrwx 1 root root 33 Jun 20 05:38 authz_host.load -> ../mods-available/authz_host.load
+lrwxrwxrwx 1 root root 33 Jun 20 05:38 authz_user.load -> ../mods-available/authz_user.load
+lrwxrwxrwx 1 root root 32 Jun 20 05:38 autoindex.conf -> ../mods-available/autoindex.conf
+lrwxrwxrwx 1 root root 32 Jun 20 05:38 autoindex.load -> ../mods-available/autoindex.load
+lrwxrwxrwx 1 root root 30 Jun 20 05:38 deflate.conf -> ../mods-available/deflate.conf
+lrwxrwxrwx 1 root root 30 Jun 20 05:38 deflate.load -> ../mods-available/deflate.load
+lrwxrwxrwx 1 root root 26 Jun 20 05:38 dir.conf -> ../mods-available/dir.conf
+lrwxrwxrwx 1 root root 26 Jun 20 05:38 dir.load -> ../mods-available/dir.load
+lrwxrwxrwx 1 root root 26 Jun 20 05:38 env.load -> ../mods-available/env.load
+lrwxrwxrwx 1 root root 29 Jun 20 05:38 filter.load -> ../mods-available/filter.load
+lrwxrwxrwx 1 root root 27 Jun 20 05:38 mime.conf -> ../mods-available/mime.conf
+lrwxrwxrwx 1 root root 27 Jun 20 05:38 mime.load -> ../mods-available/mime.load
+lrwxrwxrwx 1 root root 34 Jun 20 05:38 mpm_prefork.conf -> ../mods-available/mpm_prefork.conf
+lrwxrwxrwx 1 root root 34 Jun 20 05:38 mpm_prefork.load -> ../mods-available/mpm_prefork.load
+lrwxrwxrwx 1 root root 34 Jun 20 05:38 negotiation.conf -> ../mods-available/negotiation.conf
+lrwxrwxrwx 1 root root 34 Jun 20 05:38 negotiation.load -> ../mods-available/negotiation.load
+lrwxrwxrwx 1 root root 29 Jun 20 05:38 php8.1.conf -> ../mods-available/php8.1.conf
+lrwxrwxrwx 1 root root 29 Jun 20 05:38 php8.1.load -> ../mods-available/php8.1.load
+lrwxrwxrwx 1 root root 33 Jun 20 05:38 reqtimeout.conf -> ../mods-available/reqtimeout.conf
+lrwxrwxrwx 1 root root 33 Jun 20 05:38 reqtimeout.load -> ../mods-available/reqtimeout.load
+lrwxrwxrwx 1 root root 31 Jun 20 05:38 setenvif.conf -> ../mods-available/setenvif.conf
+lrwxrwxrwx 1 root root 31 Jun 20 05:38 setenvif.load -> ../mods-available/setenvif.load
+lrwxrwxrwx 1 root root 29 Jun 20 05:38 status.conf -> ../mods-available/status.conf
+lrwxrwxrwx 1 root root 29 Jun 20 05:38 status.load -> ../mods-available/status.load
+lex@gblex:/etc/apache2/mods-enabled$
+lex@gblex:/etc/apache2/mods-enabled$
+lex@gblex:/etc/apache2/mods-enabled$
+lex@gblex:/etc/apache2/mods-enabled$
+lex@gblex:/etc/apache2/mods-enabled$ cat php8.1.conf
+<FilesMatch ".+\.ph(ar|p|tml)$">
+    SetHandler application/x-httpd-php
+</FilesMatch>
+<FilesMatch ".+\.phps$">
+    SetHandler application/x-httpd-php-source
+    # Deny access to raw php sources by default
+    # To re-enable it's recommended to enable access to the files
+    # only in specific virtual host or directory
+    Require all denied
+</FilesMatch>
+# Deny access to files without filename (e.g. '.php')
+<FilesMatch "^\.ph(ar|p|ps|tml)$">
+    Require all denied
+</FilesMatch>
+
+# Running PHP scripts in user directories is disabled by default
+#
+# To re-enable PHP in user directories comment the following lines
+# (from <IfModule ...> to </IfModule>.) Do NOT set it to On as it
+# prevents .htaccess files from disabling it.
+<IfModule mod_userdir.c>
+    <Directory /home/*/public_html>
+        php_admin_flag engine Off
+    </Directory>
+</IfModule>
+lex@gblex:/etc/apache2/mods-enabled$
+lex@gblex:/etc/apache2$
 lex@gblex:/etc/apache2$ systemctl stop apache2
 ==== AUTHENTICATING FOR org.freedesktop.systemd1.manage-units ===
 Authentication is required to stop 'apache2.service'.
