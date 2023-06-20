@@ -6,7 +6,7 @@
 
 ## 1 Установить Nginx и настроить его на работу с PHP-FPM.
 
-![1-nginx-php](1-nginx-php/)
+![1-nginx-php](file://1-nginx-php/)
 
 ## 2 Установить Apache. Настроить обработку PHP. Добиться одновременной работы с Nginx.
 

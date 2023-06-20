@@ -23,8 +23,8 @@ ip a
 192.168.1.100
 ```
 
-наша виртуальная машина торчит наружу по IP 192.168.1.100
-Снаружи в браузере заходим на адрес 192.168.1.100:80 и попадаем на приветственную страницу nginx
+наша виртуальная машина торчит наружу по **IP 192.168.1.100**
+Снаружи в браузере заходим на адрес **192.168.1.100:80** и попадаем на приветственную страницу nginx
 ![Welcome to nginx](welcome-nginx.png)
 
 посмотрим на папку nginx
@@ -36,7 +36,7 @@ cat /etc/nginx/ngnix.conf
 
 основные настройки
 
-```json
+```bash
 user www-data;
 worker_processes auto;
 pid /run/nginx.pid;
@@ -99,7 +99,7 @@ cat /etc/nginx/sites-available/default
 
 настройки сайтов
 
-```json
+```bash
 server {
 listen 80 default_server;
 listen [::]:80 default_server;
@@ -167,7 +167,7 @@ cd /etc/nginx/sites-available/
 
 редактируем на основе полученной информации про юникс-сокет конфиг nginx
 
-```
+```bash
 sudo nano default
 ```
 
@@ -177,7 +177,7 @@ sudo nano default
 
 добавляем отдачу статики
 
-```json
+```bash
 # Add index.php to the list if you are using PHP
 index index.html index.htm index.php index.nginx-debian.html;
 
