@@ -26,6 +26,7 @@ ip a
 наша виртуальная машина торчит наружу по IP 192.168.1.100
 Снаружи в браузере заходим на адрес 192.168.1.100:80 и попадаем на приветственную страницу nginx
 ![Welcome to nginx](welcome-nginx.png)
+
 посмотрим на папку nginx
 
 ```
@@ -157,3 +158,71 @@ listen = /run/php/php8.1-fpm.sock
 ```
 /etc/nginx/snippets/fastcgi-php.conf
 ```
+
+Переходим в настройки сайтов в nginx
+
+```
+cd /etc/nginx/sites-available/
+```
+
+редактируем на основе полученной информации про юникс-сокет конфиг nginx
+
+```
+sudo nano default
+```
+
+добавляем туда файлы index.php
+добавляем обработку pph-скриптов через FastCGI server
+добавляем отдачу статики
+
+```
+# Add index.php to the list if you are using PHP
+index index.html index.htm index.php index.nginx-debian.html;
+
+# pass PHP scripts to FastCGI server
+location ~ \.php$ {
+	include snippets/fastcgi-php.conf;
+	root /var/www/html;
+	fastcgi_pass unix:/run/php/php8.1-fpm.sock;
+}
+
+# Static query
+location ~* ^.+.(jpg|jpeg|gif|png|ico|css|zip|pdf|txt|tar|js)$ {
+  root /var/www/html;
+}
+```
+
+```
+sudo nginx -t
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+```
+
+Создадим новый сайт php-fpm.test
+Сделаем для него папку в /var/www/html
+сайты там можно раскладывать по папкам
+
+```
+cd /var/www/html
+
+mkdir php-fpm.test
+cd php-fpm.test/
+```
+
+для сайта создадим индексный файл index.php
+
+```
+sudo touch index.php
+sudo nano index.php
+```
+
+напишем код в файле на выдачу phpinfo()
+
+```
+<?php
+	phpinfo();
+
+```
+
+Снаружи в браузере заходим на адрес 192.168.1.100:80/php-fpm.test/ и попадаем на приветственную страницу phpinfo(). Это отработал nginx в связке с php-fpm
+![phpinfo](php-fpm.png)

@@ -1266,3 +1266,58 @@ include fastcgi.conf;
 lex@gblex:~$
 lex@gblex:~$
 lex@gblex:~$
+lex@gblex:~$ cd /var/www/html
+lex@gblex:/var/www/html$
+lex@gblex:/var/www/html$ ls -l
+total 16
+-rw-r--r-- 1 root root 10671 Jun 20 05:38 index.html
+-rw-r--r-- 1 root root   612 Jun 20 04:28 index.nginx-debian.html
+lex@gblex:/var/www/html$
+lex@gblex:/var/www/html$
+lex@gblex:/var/www/html$
+lex@gblex:/var/www/html$ sudo mkdir php-fpm.test
+[sudo] password for lex:
+lex@gblex:/var/www/html$
+lex@gblex:/var/www/html$ ls -l
+total 20
+-rw-r--r-- 1 root root 10671 Jun 20 05:38 index.html
+-rw-r--r-- 1 root root   612 Jun 20 04:28 index.nginx-debian.html
+drwxr-xr-x 2 root root  4096 Jun 20 07:43 php-fpm.test
+lex@gblex:/var/www/html$
+lex@gblex:/var/www/html$
+lex@gblex:/var/www/html$ cd php-fpm.test/
+lex@gblex:/var/www/html/php-fpm.test$
+lex@gblex:/var/www/html/php-fpm.test$
+lex@gblex:/var/www/html/php-fpm.test$
+lex@gblex:/var/www/html/php-fpm.test$ sudo touch index.php
+lex@gblex:/var/www/html/php-fpm.test$
+lex@gblex:/var/www/html/php-fpm.test$
+lex@gblex:/var/www/html/php-fpm.test$
+lex@gblex:/var/www/html/php-fpm.test$
+lex@gblex:/var/www/html/php-fpm.test$ sudo nano index.php
+lex@gblex:/var/www/html/php-fpm.test$
+lex@gblex:/var/www/html/php-fpm.test$
+lex@gblex:/var/www/html/php-fpm.test$ cat index.php
+<?php
+	phpinfo();
+
+lex@gblex:/var/www/html/php-fpm.test$
+lex@gblex:/var/www/html/php-fpm.test$ cd /etc/nginx/sites-available/
+lex@gblex:/etc/nginx/sites-available$
+lex@gblex:/etc/nginx/sites-available$
+lex@gblex:/etc/nginx/sites-available$ ls -l
+total 4
+-rw-r--r-- 1 root root 2412 Jul 27  2022 default
+lex@gblex:/etc/nginx/sites-available$
+lex@gblex:/etc/nginx/sites-available$
+lex@gblex:/etc/nginx/sites-available$
+lex@gblex:/etc/nginx/sites-available$ sudo nano default
+lex@gblex:/etc/nginx/sites-available$
+lex@gblex:/etc/nginx/sites-available$
+lex@gblex:/etc/nginx/sites-available$
+lex@gblex:/etc/nginx/sites-available$ sudo nginx -t
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+lex@gblex:/etc/nginx/sites-available$
+lex@gblex:/etc/nginx/sites-available$
+
