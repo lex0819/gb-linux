@@ -28,6 +28,7 @@ php8.1.load -> ../mods-available/php8.1.load
 ```
 
 смотрим внутрь файла **php8.1.conf** - там деректива для апача какой интерпретатор использовать для php
+
 **SetHandler application/x-httpd-php**
 
 ```bash
