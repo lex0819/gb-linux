@@ -25,3 +25,5 @@
 [5-phpmyadmin](file://5-phpmyadmin/)
 
 ## 6 Настроить схему балансировки трафика между несколькими серверами Apache на стороне Nginx с помощью модуля ngx_http_upstream_module.
+
+[6-ngx_http_upstream_module](file://6-ngx_http_upstream_module/)
