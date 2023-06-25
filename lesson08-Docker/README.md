@@ -1,13 +1,13 @@
 # Урок 8. Запуск веб-приложения из контейнеров
 
-Создадим папку для проекта.
-Я делала вначале тестовый клон, поэтому в логах и терминале вместо **lesson08-docker** фигурирует **wp03-test**
+Создадим папку для проекта **lesson08-docker**.
 
 ```sudo
 mkdir lesson08-docker && cd lesson08-docker
 ```
 
 Создадим в корне проекта файл **docker-compose.yml** с настройками и описанием инструкций для **docker compose**.
+Создадим структуру папок снаружи в корен проекта, куда будем мапить нужную нам информацию изнутри контейнеров докера.
 
 ```sudo
 touch docker-compose.yml
@@ -18,15 +18,24 @@ mkdir -p wordpress/
 ```
 
 В папках проекта будут лежать вынесенные из контейнеров файлы, чтобы с ними было удобно работать, переносить настройки с хоста на хост.
-В этом сила докера - вынести настройки наружу из виртуальной машины проблематично, а программировать внутри нее еще проблематичнее.
-Докер же дает готовые контейнеры популярных технологий из своего репозитория, они уже собраны и настроены. А отдельные папки и файлы, предназначеные для прикладного программирования и админских настроек, очень просто вынести наружу из контейнера, писать в них свой код.
+В этом сила докера - вынести настройки наружу из виртуальной машины проблематично, а программировать внутри нее очень неудобно, для работы вообще и разработки в частности больше подходит десктоп, чем сервер.
+Докер же дает готовые контейнеры популярных технологий из своего репозитория, они уже собраны и настроены. А отдельные папки и файлы, предназначеные для прикладного программирования и админских настроек, удобно вынести наружу из контейнера, чтобы писать в них свой код.
 
 Создадим файл **wordpress.conf** с настройками сервера для wordpress в связке в php-fpm FASTCG
 и положим его в папку **./nginx/wordpress.conf**
 файл с настройками сервера для wordpress в связке в php-fpm FASTCG
 берем снаружи эти настройки и мапим в докер
 это очень важный файл он обязан быть в папке
+образ вордпресса из репозитория докера, который мы используем уже настроен на
 
+```sudo
+fastcgi_pass wordpress:9000;
+```
+
+именно это мы и прописываем в конфиге!!!
+не юникс-сокет, и не localhost:8000,
+а ровно то, что уже пришло к нам с контейнером вордпресс
+из стандартного репозитория докер.
 конфигурация сервера nginx, добавление **php-fpm** и обработку скриптов через **FASTCGI**
 
 ```sudo
@@ -57,7 +66,7 @@ mkdir -p wordpress/
 
 контейнер с **phpmyadmin** также работает внутри докера без изменений.
 
-Запуск докер компоуз
+Запуск docker compose
 
 ```sudo
 lesson08-Docker git:(master) ✗ docker compose up -d
@@ -71,20 +80,22 @@ lesson08-Docker git:(master) ✗ docker compose up -d
 ➜  lesson08-Docker git:(master) ✗
 ```
 
-Вывести с терминал все запущенные контейнеры
+Вывести в терминал все запущенные контейнеры
 
 ```sudo
 ➜  lesson08-Docker git:(master) ✗ docker ps
 CONTAINER ID   IMAGE                         COMMAND                  CREATED          STATUS          PORTS                     NAMES
-**812f4c0a9bdb**   **nginx:latest**                  "/docker-entrypoint.…"   38 seconds ago   Up 37 seconds   0.0.0.0:8080->80/tcp      lesson08-docker-nginx-1
+812f4c0a9bdb   nginx:latest                  "/docker-entrypoint.…"   38 seconds ago   Up 37 seconds   0.0.0.0:8080->80/tcp      lesson08-docker-nginx-1
 0ddb7573eecf   phpmyadmin                    "/docker-entrypoint.…"   38 seconds ago   Up 37 seconds   0.0.0.0:8081->80/tcp      lesson08-docker-pma-1
 84caa4a069fe   wordpress:php8.1-fpm-alpine   "docker-entrypoint.s…"   38 seconds ago   Up 37 seconds   9000/tcp                  lesson08-docker-wordpress-1
 2562ed8ae637   mariadb                       "docker-entrypoint.s…"   38 seconds ago   Up 38 seconds   0.0.0.0:33060->3306/tcp   lesson08-docker-mysql-1
 ➜  lesson08-Docker git:(master) ✗
 ```
 
-Зайти в контейнер **nginx** и запустить там **bash** чтобы посмотреть что внутри
+Зайти в контейнер **nginx** и запустить там **bash** чтобы посмотреть что внутри.
+
 **CONTAINER ID** берем из предыдущей команды **812f4c0a9bdb**
+
 Выход из контейнера - **exit**
 
 ```sudo
@@ -143,5 +154,18 @@ drwxr-xr-x 251   82   82  8032 May 20 04:30 wp-includes
 root@812f4c0a9bdb:/#
 root@812f4c0a9bdb:/# exit
 exit
+➜  lesson08-Docker git:(master) ✗
+```
+
+Остановка docker compose
+
+```sudo
+➜  lesson08-Docker git:(master) ✗ docker compose down
+[+] Running 5/4
+ ✔ Container lesson08-docker-nginx-1      Removed                         0.2s
+ ✔ Container lesson08-docker-pma-1        Removed                         1.2s
+ ✔ Container lesson08-docker-wordpress-1  Removed                         0.1s
+ ✔ Container lesson08-docker-mysql-1      Removed                         0.3s
+ ✔ Network lesson08-docker_default        Removed                         0.0s
 ➜  lesson08-Docker git:(master) ✗
 ```
