@@ -48,7 +48,7 @@ services:
       #программисту там нужны только файл из корня wp-config.php
       #и папка с темой и плагинами wp-content
       #папки wp-admin wp-include надо добавить в .gitignore
-      #чтобы не лезли с комиты
+      #чтобы не лезли в комиты
       - ./wordpress:/var/www/html
     depends_on:
       - mysql
