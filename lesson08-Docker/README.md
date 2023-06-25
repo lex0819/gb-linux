@@ -200,5 +200,23 @@ exit
 
 nginx крутит wordpress на адресе localhost:8080
 
-![start-8080.jpg](./jpg/start-8080.jpeg)
-![wp-welcome.jpg](./jpg/wp-welcome.jpeg)
+![start-8080.jpeg](./jpg/start-8080.jpeg)
+![wp-welcome.jpeg](./jpg/wp-welcome.jpeg)
+![wp-success.jpeg](./jpg/wp-success.jpeg)
+![wp-admin.jpeg](./jpg/wp-admin.jpeg)
+![wp-site.jpeg](./jpg/wp-site.jpeg)
+
+из докера торчит наружу phpmyadmin на адресе localhost:8081
+
+![start-8081.jpeg](./jpg/start-8081.jpeg)
+![pma-welcome.jpeg](./jpg/pma-welcome.jpeg)
+![pma-wp-db.jpeg](./jpg/pma-wp-db.jpeg)
+![pma-wp-options.jpeg](./jpg/pma-wp-options.jpeg)
+
+структура папок проекта
+
+![folders.jpeg](./jpg/folders.jpeg)
+
+access.log сервера nginx в папке проекта снаружи
+
+![access-log.jpeg](./jpg/access-log.jpeg)
