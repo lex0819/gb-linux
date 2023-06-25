@@ -199,5 +199,6 @@ exit
 ## Шаги и скриншоты снаружи докера на локальной машине
 
 nginx крутит wordpress на адресе localhost:8080
-![jpg/start-8080.jpg](./jpg/start-8080.jpg)
-![jpg/wp-welcome.jpg](./jpg/wp-welcome.jpg)
+
+![start-8080.jpg](./jpg/start-8080.jpeg)
+![wp-welcome.jpg](./jpg/wp-welcome.jpeg)
