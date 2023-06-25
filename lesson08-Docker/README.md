@@ -195,3 +195,9 @@ exit
  ✔ Network lesson08-docker_default        Removed                         0.0s
 ➜  lesson08-Docker git:(master) ✗
 ```
+
+## Шаги и скриншоты снаружи докера на локальной машине
+
+nginx крутит wordpress на адресе localhost:8080
+![jpg/start-8080.jpg](jpg/start-8080.jpg)
+![jpg/wp-welcome.jpg](jpg/wp-welcome.jpg)
