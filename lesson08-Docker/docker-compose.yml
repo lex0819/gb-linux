@@ -1,0 +1,77 @@
+version: '3'
+services:
+  #внутри контейнеров порты повторяются потому, что контейнеры изолированы
+  #внутри докера много отдельных хостов
+  #наружу порты повторять нельзя и нельзя занимать уже занятые порты
+  #снаружы один единственных хост, наш локальный компьютер
+  nginx:
+    image: nginx:latest
+    ports:
+      #port 8080 торчит наружуиз докера
+      #внутри контейнера с сервером докер крутит его на 80 порту
+      - '8080:80'
+    volumes:
+      #файл с настройками сервера для wordpress в связке в php-fpm FASTCGI
+      #берем снаружи эти настройки и мапим в докер
+      #это очень важный файл он обязан быть в папке
+      #здесь это файл wordpress.conf
+      - ./nginx:/etc/nginx/conf.d
+      #вывод логов наружу из контейнера
+      - ./logs:/var/log/nginx
+      #вывод папки с сатом(сайтами) наружу из контейнера
+      #там у нас только один вордпресс
+      - ./wordpress:/var/www/html
+    links:
+      - wordpress
+    restart: always
+  mysql:
+    image: mariadb
+    ports:
+      #снаружи к mysql конектиться не будем, поэтому наружу порт без разницы
+      #лишь бы не было снаружи конфликтов портов
+      - '33060:3306'
+    volumes:
+      #вывод папки с таблицами БД наружу из контейнера
+      - ./db-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 123 #рут пароль БД
+      MYSQL_DATABASE: wpdb #имя базы данных вордпресса
+      MYSQL_USER: user_wp #юзер от БД для вордпресс
+      MYSQL_PASSWORD: 456 #пароль юзера вордпресс БД
+    restart: always
+  wordpress:
+    #образ специально для работы в связке nginx + php-fpm
+    image: wordpress:php8.1-fpm-alpine
+    volumes:
+      #вывод наружу всей папки вордпресс
+      #совпадает с сервером, два раза одно и то же
+      #программисту там нужны только файл из корня wp-config.php
+      #и папка с темой и плагинами wp-content
+      #папки wp-admin wp-include надо добавить в .gitignore
+      #чтобы не лезли с комиты
+      - ./wordpress:/var/www/html
+    depends_on:
+      - mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 123
+      WORDPRESS_DB_HOST: mysql
+      WORDPRESS_DB_NAME: wpdb
+      WORDPRESS_DB_USER: user_wp
+      WORDPRESS_DB_PASSWORD: 456
+      WORDPRESS_TABLE_PREFIX: wp_
+    links:
+      - mysql
+    restart: always
+  pma:
+    image: phpmyadmin
+    restart: always
+    links:
+      - mysql:mysql
+    ports:
+      #port 8081 торчит наружуиз докера
+      #внутри контейнера с phpmyadmin докер крутит его на 80 порту
+      - 8081:80
+    environment:
+      PMA_HOST: mysql
+      MYSQL_USERNAME: root
+      MYSQL_ROOT_PASSWORD: 123
